@@ -10,11 +10,29 @@ Principal Components Analysis (PCA) is a popular method for linear dimensionalit
 Suppose we wish to find the first direction $a_1$ (such that $a_1^\top a_1 = 1$) to maximize $\frac{1}{n} \sum_i (a_1^\top x_i)^2$.
 Show that $a_1$ is the first right singular vector of $X$.
 
+\begin{soln}
+Let $X = U\Sigma V^\top$ be the SVD of $X$. To find the first principal component, we need to find the direction in which the data varies the most, which means $a_1$ should be the solution of following optimization problem:
+\begin{align*}
+  \max \Var (Xa_1) &= (Xa_1)^T(Xa_1)/n = a_1^T \Sigma^T \Sigma a_1/n \\
+  \text{s.t. } a_1^\top a_1 &= 1
+\end{align*}
+The solution of this problem will give the eigenvector associated with the largest eigenvalue of $\Sigma^T \Sigma$, which is the first right singular vector of $X$, to see that, we can exam that $X^\top X = V\Sigma^\top U^\top U\Sigma V^\top = V\Sigma^\top \Sigma V^\top$, and $\Sigma$ is a diagonal matrix with decreasing entries. Thus, the solution $a_1$ is the first right singular vector of $X$.
+\end{soln}
+
 \item  \textbf{(6 Points)}
 Given $a_1, \dots, a_k$, let $A_k = [a_1, \dots, a_k]$ and 
 $\tilde{x}_i = x_i - A A^\top x_i$. We wish to find $a_{k+1}$, to maximize
 $\frac{1}{n} \sum_i (a_{k+1}^\top \tilde{x}_i)^2$. Show that $a_{k+1}$ is the
 $(k+1)^{th}$ right singular vector of $X$.
+
+\begin{soln}
+  We can show it by induction. For $k=1$, we have already shown that $a_1$ is the first right singular vector of $X$. For $k$, $A_k$ is the first $k$ right singular vectors of $X$. We want to find $a_{k+1}$ to solve the following optimization problem:
+  \begin{align*}
+    \max \Var (\tilde{X}a_{k+1}) &= (\tilde{X}a_{k+1})^T(\tilde{X}a_{k+1})/n = a_{k+1}^T \tilde{\Sigma}^T \tilde{\Sigma} a_{k+1}/n \\
+    \text{s.t. } a_{k+1}^\top a_{k+1} &= 1
+  \end{align*}
+  Where $\tilde{X} = [\tilde{x}_1^\top; \dots; \tilde{x}_n^\top]$ and $\tilde{\Sigma}$ is $\Sigma$ with first $k$ diagonal entries are 0. Then the solution of this optimization problem is the $(k+1)^{th}$ right singular vector of $X$ since it associated with the largest entry of $\tilde{\Sigma}^T \tilde{\Sigma}$.
+\end{soln}
 
 \end{enumerate}
 
@@ -54,6 +72,11 @@ Show that both
 $(A_1, b_1, Z_1)$ and $(A_2, b_2, Z_2)$ achieve the same objective value $J$~\eqref{eqn:dimobj}.
 \end{enumerate}
 
+\begin{soln}
+  $J(A_2, b_2, Z_2) = \| X - Z_2A_2^\top - \one b_2^\top\|_F^2 = \| X - (Z_1 M^\top +
+  \one p^\top)(A_1M^{-1})^\top - \one (b_1- A_1M^{-1}p)^\top\|_F^2 = \| X - Z_1A_1^\top - \one b_1^\top\|_F^2 = J(A_1, b_1, Z_1)$.
+\end{soln}
+
 Therefore, in order to make the problem determined, we need to impose some
 constraint on $Z$. We will assume that the $z_i$'s have zero mean and identity covariance.
 That is,
@@ -74,6 +97,20 @@ would obtain $A, Z, b$ which minimize the objective and satisfy the constraints.
 \textbf{Hint: }The rank $k$ approximation of a matrix in Frobenius norm is obtained by
 taking its SVD and then zeroing out all but the first $k$ singular values.
 
+\begin{soln}
+  We first subtract the mean of $X$ along each dimension to obtain a zero-mean matrix $\bar{X}$, which will allow us to enforce the constraint that $Z$ has zero mean. Then we perform SVD on $\bar{X}$ to obtain $U, \Sigma, V^\top$ such that $\bar{X} = U\Sigma V^\top$. For rank d approximation, we take $U_d = U[1:n,1:d], \Sigma_d = \Sigma[1:d,1:d]$ and $V_d^T = V^T[1:d,1:D]$.
+  Now, we can calculate $Z$ and $A$ from the truncated SVD:
+  \begin{align*}
+    Z &= \sqrt{n} U_d \\
+    A &= V_d \Sigma_d / \sqrt{n}
+  \end{align*}
+  Since we subtracted the mean of $X$ before performing the SVD, $Z$ will have zero mean. Moreover, because $U_d$ is orthogonal, the covariance matrix of $Z$ will be an identity matrix. \\
+  Now that Z has zero mean and identity covariance, we can calculate the bias term b as the mean of the original matrix X along each dimension:
+  \begin{align*}
+    b &= \frac{1}{n} \sum_{i=1}^n x_i = \frac{1}{n} X^\top {\bf 1}_D
+  \end{align*}
+\end{soln}
+
 \item \textbf{(3 Points)}
 You are given a point $x_*$ in the original $D$ dimensional space.
 State the rule to obtain the $d$ dimensional
@@ -81,6 +118,9 @@ representation $z_*$ for this new point.
 (If $x_*$ is some original point $x_i$ from the $D$--dimensional space, it shoud be the
 $d$--dimensional representation $z_i$.)
 
+\begin{soln}
+  $z_* = A^\top (x_* - b) = \Sigma_d V_d^T (x_* - b) / \sqrt{n}$
+\end{soln}
 
 \end{enumerate}
 
@@ -136,11 +176,49 @@ Let $X\in \RR^{r\times c}$, and $u\in \RR^r$, $v,w \in \RR^c$.
 Assuming some given values for $A$, $b$, and $\eta^2$, write down the joint distribution of $(z,x)$. Use this to derive the marginal
 distribution of $x$ and the conditional distribution $z|x$. 
 
+\begin{soln}
+  The joint distribution of $(z,x)$ is given by:
+  \begin{align*}
+    \left(\begin{array}{c}z \\ x\end{array}\right) =
+  \Ncal \left( \left(\begin{array}{c} 0 \\ b \end{array} \right), 
+  \left[ \begin{array}{cc} I_d & A^T \\ A &
+    AA^T + \eta^2 I_D \end{array} \right] 
+  \right)
+  \end{align*}
+
+  The marginal distribution of $x$ is given by:
+  \begin{align*}
+    x \sim \Ncal(b, AA^T + \eta^2 I_D)
+  \end{align*}
+
+  The conditional distribution of $z$ given $x$ is given by:
+  \begin{align*}
+    z | x \sim \Ncal(A^\top (x - b), I_d - A^\top (AA^T + \eta^2 I_D)^{-1} A)
+  \end{align*}
+\end{soln}
+
 \item \textbf{(4 points)}
 Write the log likelihood in terms of parameters $A$, $b$, and $\eta^2$.
 
+\begin{soln}
+  Define $C = AA^T + \eta^2 I$. Then the log likelihood is given by:
+  \begin{align*}
+    \log p(x_1, \ldots, x_n) &= \log \prod_{i=1}^n p(x_i) \\
+    &= \sum_{i=1}^n \log p(x_i) \\
+    &= -\frac{1}{2} \sum_{i=1}^n (x_i - b)^\top C^{-1} (x_i - b) - \frac{1}{2} \log \det (2\pi C) \\
+    &= -\frac{n}{2} \log \det (2\pi C) - \frac{1}{2} \sum_{i=1}^n (x_i - b)^\top C^{-1} (x_i - b)
+  \end{align*}
+\end{soln}
+
 \item \textbf{(4 Points)}
 First obtain the Maximum Likelihood Estimate for $b$. This does not require EM.
+
+\begin{soln}
+  The MLE for $b$ is given by:
+  \begin{align*}
+    b = \frac{1}{n} \sum_{i=1}^n x_i
+  \end{align*}
+\end{soln}
 
 \item \textbf{(10 Points)}
 To apply the EM algorithm,
