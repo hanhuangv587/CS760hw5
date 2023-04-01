@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.3.21)  30 MAR 2023 02:17
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.3.21)  1 APR 2023 12:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -573,12 +573,9 @@ Package hyperref Info: Link coloring OFF on input line 191.
 \@outlinefile=\write5
 \openout5 = `hw5.out'.
 
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
+
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sc' undefined
 (Font)              using `TU/ptm/m/n' instead on input line 194.
@@ -600,35 +597,41 @@ LaTeX Font Info:    Trying to load font information for U+bbm on input line 14.
  (c:/Users/ywang/scoop/apps/texlive-full/current/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
 )
-
-LaTeX Font Warning: Font shape `TU/ptm/m/it' undefined
-(Font)              using `TU/ptm/m/n' instead on input line 72.
+Overfull \hbox (25.13457pt too wide) in paragraph at lines 23--34
+\TU/ptm/b/n/10 have $\OMS/cmsy/m/n/10 J[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 X[]\OT1/cmr/m/n/10 ) = [][] \OMS/cmsy/m/n/10 k\OML/cmm/m/it/10 X[] \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^V[]\OMS/cmsy/m/n/10 k[]$\TU/ptm/b/n/10 . For the inductive step, we have $\OMS/cmsy/m/n/10 J[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 X[]\OT1/cmr/m/n/10 ) = [][] \OML/cmm/m/it/10 J\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^V[]; f\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 X[]\OT1/cmr/m/n/10 )$
+ []
 
 [1
 
-]) (./prob2.tex [2]
-Underfull \hbox (badness 10000) in paragraph at lines 115--120
+]
+
+LaTeX Font Warning: Font shape `TU/ptm/m/it' undefined
+(Font)              using `TU/ptm/m/n' instead on input line 93.
+
+) (./prob2.tex [2]
+Underfull \hbox (badness 10000) in paragraph at lines 103--108
 
  []
 
 [3]
-LaTeX Font Info:    Trying to load font information for TU+pcr on input line 227.
-LaTeX Font Info:    No file TUpcr.fd. on input line 227.
+LaTeX Font Info:    Trying to load font information for TU+pcr on input line 205.
+LaTeX Font Info:    No file TUpcr.fd. on input line 205.
 
 
 LaTeX Font Warning: Font shape `TU/pcr/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 227.
+(Font)              using `TU/lmr/m/n' instead on input line 205.
 
+[4]
 File: pcaprog/buggy_pca.eps Graphic file (type eps)
 <pcaprog/buggy_pca.eps>
 File: pcaprog/demeaned_pca.eps Graphic file (type eps)
 <pcaprog/demeaned_pca.eps>
 
-Overfull \hbox (13.99965pt too wide) in paragraph at lines 288--291
+Overfull \hbox (13.99965pt too wide) in paragraph at lines 266--269
 [][]   [] 
  []
 
-[4]) [5] (./hw5.aux)
+) [5] (./hw5.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -637,11 +640,11 @@ Package rerunfilecheck Info: File `hw5.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  13977 strings out of 476683
- 230796 string characters out of 5795227
- 1870012 words of memory out of 5000000
+ 230774 string characters out of 5795227
+ 1871012 words of memory out of 5000000
  33968 multiletter control sequences out of 15000+600000
  520345 words of font info for 69 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 60i,12n,67p,599b,400s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 60i,12n,67p,599b,466s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on hw5.pdf (5 pages).

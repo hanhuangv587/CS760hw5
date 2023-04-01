@@ -15,13 +15,34 @@ J(\mu_1^K, f; X_1^n) = \sum_{i=1}^n \sum_{k=1}^K \indfone(f(X_i) = k) \|X_i - \m
 \label{eqn:kmeans}
 \end{equation}
 
-Let $\Jcal_K(X_1^n) = \min_{\mu_1^k, f} J(\mu_1^K, f; X_1^n)$. Prove that
+Let $\Jcal_K(X_1^n) = \min_{\mu^k, f} J(\mu_1^K, f; X_1^n)$. Prove that
 $\Jcal_{K}(X_1^n)$ is a non-increasing function of $K$.
+
+\begin{soln}
+
+    We can easily see that $\Jcal_{K}(X_1^n)$ is a non-increasing function of $K$ by
+    induction. For the base case, we have $\Jcal_{1}(X_1^n) = \sum_{i=1}^n \|X_i -
+    \mu_1\|^2 $. For the inductive step, we have $\Jcal_{K+1}(X_1^n) = \min_{\mu_1^{K
+    +1}, f} J(\mu_1^{K+1}, f; X_1^n)$ = $\min_{\mu_1^{K+1}, f} \sum_{i=1}^n \sum_{k=1}^
+    {K+1} \indfone(f(X_i) = k) \|X_i - \mu_k\|^2 \leq \min_{\mu_1^{K}, f} \sum_{i=1}^n
+    \sum_{k=1}^{K} \indfone(f(X_i) = k) \|X_i - \mu_k\|^2 = \min_{\mu_1^{K}, f} J(\mu_1^
+    {K}, f; X_1^n) = \Jcal_{K}(X_1^n)$. Therefore, $\Jcal_{K}(X_1^n)$ is a
+    non-increasing function of $K$.
+    The less than or equal is hold since we can always set $\mu_{K+1} = \{\mu_{K},0\}$
+    and keep the same $f$ to achieve $\Jcal_{K}(X_1^n)$. And by optimizing $\mu_{K+1}
+    $, we can achieve $\Jcal_{K+1}(X_1^n)$ less than or equal to $\Jcal_{K}(X_1^n)$. 
+
+\end{soln}
 
 \item \textbf{(8 Points)}
 Consider the K-means (Lloyd's) clustering algorithm we studied in class. We
 terminate the algorithm when there are no changes to the objective.
 Show that the algorithm terminates in a finite number of steps.
+
+\begin{soln}
+    First notice that for a given number of K, the possible choices of $\mu^k$ is finite. For each dimension of $\mu^k$, there are at most $\sum_{i=1}^{n} C_{n}^{i}=2^n$ possible centers. And from the $t$ step to the $t+1$ step, the objective function is decreasing unless it reach the optimal(since both the center calculation and regroup will result a decreasing in objective function unless no change).   
+    Therefore, an algorithm optimize a discrete function and grantee to decrease in each step until stop will terminate in a finite number of steps.
+\end{soln}
 
 \end{enumerate}
 
