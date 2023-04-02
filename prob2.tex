@@ -193,7 +193,7 @@ distribution of $x$ and the conditional distribution $z|x$.
 
   The conditional distribution of $z$ given $x$ is given by:
   \begin{align*}
-    z | x \sim \Ncal(A^\top (x - b), I_d - A^\top (AA^T + \eta^2 I_D)^{-1} A)
+    z | x \sim \Ncal(A^\top (AA^T + \eta^2 I_D)^{-1} (x - b), I_d - A^\top (AA^T + \eta^2 I_D)^{-1} A)
   \end{align*}
 \end{soln}
 
@@ -201,12 +201,17 @@ distribution of $x$ and the conditional distribution $z|x$.
 Write the log likelihood in terms of parameters $A$, $b$, and $\eta^2$.
 
 \begin{soln}
-  Define $C = AA^T + \eta^2 I$. Then the log likelihood is given by:
+  Define $C = AA^T + \eta^2 I$ and $S = \frac{1}{n} \sum_{i=1}^n (x_i - b)(x_i -b)^\top$. Then the log likelihood is given by:
   \begin{align*}
-    \log p(x_1, \ldots, x_n) &= \log \prod_{i=1}^n p(x_i) \\
+    -\log p(x) &= \log \prod_{i=1}^n p(x_i) \\
     &= \sum_{i=1}^n \log p(x_i) \\
-    &= -\frac{1}{2} \sum_{i=1}^n (x_i - b)^\top C^{-1} (x_i - b) - \frac{1}{2} \log \det (2\pi C) \\
-    &= -\frac{n}{2} \log \det (2\pi C) - \frac{1}{2} \sum_{i=1}^n (x_i - b)^\top C^{-1} (x_i - b)
+    &= -\frac{n}{2} (D \log (2\pi) + ln \det C + tr(C^{-1} S)) \\
+  \end{align*}
+  And $\log p(x,z)$, can be expressed by $\log p(x|z)$ and $\log p(z)$:
+  \begin{align*}
+    \log p(x,z) &= \log p(z) + \log p(x|z) \\
+    -\log p(z) &= -\frac{1}{2} z^\top z - \frac{n}{2} \log \det (2\pi I_d) \\
+    -\log p(x|z) &= -\frac{1}{2} (x - b - Az)^\top (\eta^2 I_D)^{-1} (x - b - Az) - \frac{n}{2} \log \det (2\pi \eta^2 I_D)
   \end{align*}
 \end{soln}
 
@@ -218,12 +223,24 @@ First obtain the Maximum Likelihood Estimate for $b$. This does not require EM.
   \begin{align*}
     b = \frac{1}{n} \sum_{i=1}^n x_i
   \end{align*}
+  It can be derived from maximize the log likelihood of $p(x)$ since it only appears in $S$. And to maximize the log likelihood of $p(x)$ we need to find $b$ that minimizes $S$, which is the mean of $x$ in each dimension.
 \end{soln}
 
 \item \textbf{(10 Points)}
 To apply the EM algorithm,
 let $Q(z_i)$  denote some distribution over $z_i$ for each $z_i$.
 Obtain a lower bound on the log likelihood via Jensen's inequality.
+
+\begin{soln}
+  For our log likelihood, we have:
+  \begin{align*}
+    \sum_{i=1}^n \log p(x_i) &= \sum_{i=1}^n \log \int Q(z_i) \frac{p(x_i, z_i)}{Q(z_i)} dz_i \\
+  \end{align*}
+  By Jensen's inequality, we have:
+  \begin{align*}
+    \sum_{i=1}^n \log p(x_i) &\geq \sum_{i=1}^n \int Q(z_i) \log \frac{p(x_i, z_i)}{Q(z_i)} dz_i 
+  \end{align*}
+\end{soln}
 
 \item \textbf{(4 Points)}
 Recall, from the lectures, that we chose
@@ -235,9 +252,51 @@ Write down the E-step update for the next iteration. \\
 N.B: Unlike in GMMs, where the latent variable was discrete, here the latent variable is continuous. Fortunately, it has a parametric form we can represent $Q(z_i)$ using a finite number of parameters. \\
 (Hint: See part 1)
 
+\begin{soln}
+  For the E-step we need to be able to compute the expected log-likelihood with respect to the conditional distribution of our latent variables $z$ given $x$ and our current estimates of the parameters (E-step):
+  \begin{align*}
+    Q(A, \eta | A^t, \eta^t) &= \mathbb{E}_{z|x, A^t, \eta^t} \left[ \log p(x,z| A, \eta) \right] \\
+  \end{align*}
+  From 2.3.2, we notice that $\log p(z)$ does not contain any parameters, so we can ignore it. What remains is:
+  \begin{align*}
+    Q(A, \eta) &= \mathbb{E} \left[ \log p(x|z) \right] \\
+    &= -\frac{1}{2} \sum_{i=1}^n \mathbb{E} \left[ (x_i - b - Az_i)^\top (\eta^2 I_D)^{-1} (x_i - b - Az_i)\right] - n^2 \log \eta + constant  \\
+    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \mathbb{E} \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A z_i + z_i^\top A^\top A z_i  \right] - n^2 \log \eta + constant \\
+    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A \mathbb{E}[z] + \mathbb{E}[z^\top A^\top A z]  \right] - n^2 \log \eta + constant \\
+    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A \mathbb{E}[z] + tr(A^\top A \mathbb{E}[z z^\top])  \right] - n^2 \log \eta + constant
+  \end{align*}
+
+  Before M-step we need to compute the expected value of $z$ and $z z^\top$, which can get from Q2.3.1: \\
+  Let $\beta = A^\top C=A^\top (AA^\top + \eta^2 I)$
+  \begin{align*}
+    \mathbb{E}_{z|x}[z] &= \beta (x- b \mathbf{1}_n^\top ) \\
+    \mathbb{E}_{z|x}[z z^\top] &= I_d - \beta A + \beta xx^\top \beta^\top
+  \end{align*}
+\end{soln}
+
 \item \textbf{(10 Points)}
 Now write down the M-step update for parameters $A$ and $\eta$, obtained
 by maximizing the lower bound obtained from parts 3 and 4.
+
+\begin{soln}
+  Derivative w.r.t. $A$:
+  \begin{align*}
+    \frac{\partial Q(A, \eta)}{\partial A} &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ -2 \bar{x}_i \mathbb{E}[z]^\top + 2 A \mathbb{E}[z z^\top] \right] \\
+  \end{align*}
+  Setting it to $0$, we can solve for $A$:
+  \begin{align*}
+    A^* &= (x \mathbb{E}_{z|x}[z^\top]) / ( \mathbb{E}_{z|x}[z z^\top]) \\
+  \end{align*}
+  Derivative w.r.t. $\eta$:
+  \begin{align*}
+    \frac{\partial Q(A, \eta)}{\partial \eta} &= -\frac{1}{2 \eta^3} \sum_{i=1}^n \left[ -2 \bar{x}_i^\top \bar{x}_i + 2 \bar{x}_i^\top A \mathbb{E}[z] + 2 tr(A^\top A \mathbb{E}[z z^\top])  \right] - n^2 / \eta \\
+  \end{align*}
+  Setting it to $0$, we can solve for $\eta$:
+  \begin{align*}
+    \eta^{2*} &= \frac{1}{nD} tr(\sum_{i=1}^n x_ix_i^\top - A^* \mathbb{E}_{z|x}[z] x_i^\top) \\
+  \end{align*}
+  Bring in the $\mathbb{E}_{z|x}[z]$ and $\mathbb{E}_{z|x}[z z^\top]$ from Q2.3.5, we can get $A^*$ and $\eta^*$.
+\end{soln}
 
 \end{enumerate}
 
