@@ -28,10 +28,11 @@ $(k+1)^{th}$ right singular vector of $X$.
 \begin{soln}
   We can show it by induction. For $k=1$, we have already shown that $a_1$ is the first right singular vector of $X$. For $k$, $A_k$ is the first $k$ right singular vectors of $X$. We want to find $a_{k+1}$ to solve the following optimization problem:
   \begin{align*}
-    \max \Var (\tilde{X}a_{k+1}) &= (\tilde{X}a_{k+1})^T(\tilde{X}a_{k+1})/n = a_{k+1}^T \tilde{\Sigma}^T \tilde{\Sigma} a_{k+1}/n \\
+    \max_{a_{k+1}} \Var (\tilde{X}a_{k+1}) &= (\tilde{X}a_{k+1})^T(\tilde{X}a_{k+1})/n = a_{k+1}^T \tilde{\Sigma}^T \tilde{\Sigma} a_{k+1}/n \\
     \text{s.t. } a_{k+1}^\top a_{k+1} &= 1
   \end{align*}
-  Where $\tilde{X} = [\tilde{x}_1^\top; \dots; \tilde{x}_n^\top] = X V_k V_k^\top$ and $\tilde{\Sigma}$ is $\Sigma$ with first $k$ diagonal entries are 0. Then the solution of this optimization problem is the $(k+1)^{th}$ right singular vector of $X$ since it associated with the largest entry of $\tilde{\Sigma}^T \tilde{\Sigma}$.
+  Where $\tilde{X} = [\tilde{x}_1^\top; \dots; \tilde{x}_n^\top] = (I - V_k V_k^\top) X $ and $I - V_k V_k^\top$ is a diagonal matrix with first $k$ entries equal to 0 and remains equal to 1. Then $\tilde{\Sigma} = (I - V_k V_k^\top) \Sigma$ is a diagonal matrix with first $k$ entries equal to 0 and remains equal to $\Sigma$. \\
+  So problem is equivalent to finding the first eigenvactor of $\tilde{X}^\top \tilde{X}$, which is the $(k+1)^{th}$ eigenvactor of $X^\top X$ (since the first $k$ eigenvalue in $\Sigma$ are set to be 0). So, the solution $a_{k+1}$ is the $(k+1)^{th}$ right singular vector of $X$.
 \end{soln}
 
 \end{enumerate}
@@ -416,7 +417,7 @@ The blue circles are from the original dataset and the red crosses are the recon
     Demeaned PCA: 273.0459589786028
     Normalized PCA: 273.62858099762326
     DRO: 273.0459589786028
-    DRLV: 313.69333446428493
+    DRLV: 273.04842479836793
   \end{verbatim}
     Q1: Buggy PCA is trying to project the points onto a line that passes through the origin. However, the original points are not seem to on a line passes through the origin, so the reconstruction error is high.
     Q2: No, because these two methods are equivalent to each other. The process of them are both demean, then do SVD, and then project the points onto the first $d$ principal components, finally add the mean back. So the reconstruction error is the same. Their cluster results $z$ are only different in the scale, but the reconstruction results $r(z)$ are the same.

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.3.21)  2 APR 2023 21:18
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.3.21)  2 APR 2023 21:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -626,34 +626,31 @@ File: Fig2.png Graphic file (type bmp)
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 ) (./prob2.tex [2] [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 143--148
+Underfull \hbox (badness 10000) in paragraph at lines 144--149
 
  []
 
-[5] [6]
-LaTeX Font Info:    Trying to load font information for TU+pcr on input line 338.
-LaTeX Font Info:    No file TUpcr.fd. on input line 338.
+[5] [6] [7]
+LaTeX Font Info:    Trying to load font information for TU+pcr on input line 339.
+LaTeX Font Info:    No file TUpcr.fd. on input line 339.
 
 
 LaTeX Font Warning: Font shape `TU/pcr/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 338.
+(Font)              using `TU/lmr/m/n' instead on input line 339.
 
-[7]
 File: pcaprog/buggy_pca.eps Graphic file (type eps)
 <pcaprog/buggy_pca.eps>
 File: pcaprog/demeaned_pca.eps Graphic file (type eps)
 <pcaprog/demeaned_pca.eps>
 
-Overfull \hbox (13.99965pt too wide) in paragraph at lines 399--402
+Overfull \hbox (13.99965pt too wide) in paragraph at lines 400--403
 [][]   [] 
  []
 
+[8]
 File: Fig3.png Graphic file (type bmp)
 <Fig3.png>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[8]) [9] (./hw5.aux)
+) [9] (./hw5.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
