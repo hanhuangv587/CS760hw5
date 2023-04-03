@@ -7,13 +7,13 @@ Principal Components Analysis (PCA) is a popular method for linear dimensionalit
 \begin{enumerate}
 
 \item  \textbf{(4 Points)}
-Suppose we wish to find the first direction $a_1$ (such that $a_1^\top a_1 = 1$) to maximize $\frac{1}{n} \sum_i (a_1^\top x_i)^2$.
+Suppose we wish to find the first direction $a_1$ (such that $a_1^\top a_1 = 1$) to maximize $\frac{1}{n} \sum_i (a_1^\top X_i)^2$.
 Show that $a_1$ is the first right singular vector of $X$.
 
 \begin{soln}
 Let $X = U\Sigma V^\top$ be the SVD of $X$. To find the first principal component, we need to find the direction in which the data varies the most, which means $a_1$ should be the solution of following optimization problem:
 \begin{align*}
-  \max \Var (Xa_1) &= (Xa_1)^T(Xa_1)/n = a_1^T \Sigma^T \Sigma a_1/n \\
+  \max_{a_1} \Var (Xa_1) &= (Xa_1)^T(Xa_1)/n = a_1^T \Sigma^T \Sigma a_1/n \\
   \text{s.t. } a_1^\top a_1 &= 1
 \end{align*}
 The solution of this problem will give the eigenvector associated with the largest eigenvalue of $\Sigma^T \Sigma$, which is the first right singular vector of $X$, to see that, we can exam that $X^\top X = V\Sigma^\top U^\top U\Sigma V^\top = V\Sigma^\top \Sigma V^\top$, and $\Sigma$ is a diagonal matrix with decreasing entries. Thus, the solution $a_1$ is the first right singular vector of $X$.
@@ -21,7 +21,7 @@ The solution of this problem will give the eigenvector associated with the large
 
 \item  \textbf{(6 Points)}
 Given $a_1, \dots, a_k$, let $A_k = [a_1, \dots, a_k]$ and 
-$\tilde{x}_i = x_i - A A^\top x_i$. We wish to find $a_{k+1}$, to maximize
+$\tilde{x}_i = x_i - A_k A_k^\top x_i$. We wish to find $a_{k+1}$, to maximize
 $\frac{1}{n} \sum_i (a_{k+1}^\top \tilde{x}_i)^2$. Show that $a_{k+1}$ is the
 $(k+1)^{th}$ right singular vector of $X$.
 
@@ -31,7 +31,7 @@ $(k+1)^{th}$ right singular vector of $X$.
     \max \Var (\tilde{X}a_{k+1}) &= (\tilde{X}a_{k+1})^T(\tilde{X}a_{k+1})/n = a_{k+1}^T \tilde{\Sigma}^T \tilde{\Sigma} a_{k+1}/n \\
     \text{s.t. } a_{k+1}^\top a_{k+1} &= 1
   \end{align*}
-  Where $\tilde{X} = [\tilde{x}_1^\top; \dots; \tilde{x}_n^\top]$ and $\tilde{\Sigma}$ is $\Sigma$ with first $k$ diagonal entries are 0. Then the solution of this optimization problem is the $(k+1)^{th}$ right singular vector of $X$ since it associated with the largest entry of $\tilde{\Sigma}^T \tilde{\Sigma}$.
+  Where $\tilde{X} = [\tilde{x}_1^\top; \dots; \tilde{x}_n^\top] = X V_k V_k^\top$ and $\tilde{\Sigma}$ is $\Sigma$ with first $k$ diagonal entries are 0. Then the solution of this optimization problem is the $(k+1)^{th}$ right singular vector of $X$ since it associated with the largest entry of $\tilde{\Sigma}^T \tilde{\Sigma}$.
 \end{soln}
 
 \end{enumerate}
@@ -81,7 +81,7 @@ Therefore, in order to make the problem determined, we need to impose some
 constraint on $Z$. We will assume that the $z_i$'s have zero mean and identity covariance.
 That is,
 \begin{align*}
-\Zbar = \frac{1}{n} \sum_{i=1}^n z_i =\frac{1}{n} Z^\top {\bf 1}_d = 0, \hspace{0.3in} 
+\Zbar = \frac{1}{n} \sum_{i=1}^n z_i =\frac{1}{n} Z^\top {\bf 1}_n = 0, \hspace{0.3in} 
 S = \frac{1}{n} \sum_{i=1}^n z_i z_i^\top 
 = \frac{1}{n} Z Z^\top
 = I_d
@@ -104,10 +104,10 @@ taking its SVD and then zeroing out all but the first $k$ singular values.
     Z &= \sqrt{n} U_d \\
     A &= V_d \Sigma_d / \sqrt{n}
   \end{align*}
-  Since we subtracted the mean of $X$ before performing the SVD, $Z$ will have zero mean. Moreover, because $U_d$ is orthogonal, the covariance matrix of $Z$ will be an identity matrix. \\
+  Since we subtracted the mean of $X$ before performing the SVD, $Z$ will have zero mean. Moreover, because $U_d$ is orthogonal with $n$ rows, the covariance matrix of $Z$ will be an identity matrix. \\
   Now that Z has zero mean and identity covariance, we can calculate the bias term b as the mean of the original matrix X along each dimension:
   \begin{align*}
-    b &= \frac{1}{n} \sum_{i=1}^n x_i = \frac{1}{n} X^\top {\bf 1}_D
+    b &= \frac{1}{n} \sum_{i=1}^n x_i = \frac{1}{n} X^\top {\bf 1}_n
   \end{align*}
 \end{soln}
 
@@ -201,17 +201,11 @@ distribution of $x$ and the conditional distribution $z|x$.
 Write the log likelihood in terms of parameters $A$, $b$, and $\eta^2$.
 
 \begin{soln}
-  Define $C = AA^T + \eta^2 I$ and $S = \frac{1}{n} \sum_{i=1}^n (x_i - b)(x_i -b)^\top$. Then the log likelihood is given by:
+  Define $C = AA^T + \eta^2 I_D$ and $S = \frac{1}{n} \sum_{i=1}^n (x_i - b)(x_i -b)^\top$. Then the log likelihood is given by:
   \begin{align*}
-    -\log p(x) &= \log \prod_{i=1}^n p(x_i) \\
+    \log p(x) &= \log \prod_{i=1}^n p(x_i) \\
     &= \sum_{i=1}^n \log p(x_i) \\
     &= -\frac{n}{2} (D \log (2\pi) + ln \det C + tr(C^{-1} S)) \\
-  \end{align*}
-  And $\log p(x,z)$, can be expressed by $\log p(x|z)$ and $\log p(z)$:
-  \begin{align*}
-    \log p(x,z) &= \log p(z) + \log p(x|z) \\
-    -\log p(z) &= -\frac{1}{2} z^\top z - \frac{n}{2} \log \det (2\pi I_d) \\
-    -\log p(x|z) &= -\frac{1}{2} (x - b - Az)^\top (\eta^2 I_D)^{-1} (x - b - Az) - \frac{n}{2} \log \det (2\pi \eta^2 I_D)
   \end{align*}
 \end{soln}
 
@@ -238,8 +232,9 @@ Obtain a lower bound on the log likelihood via Jensen's inequality.
   \end{align*}
   By Jensen's inequality, we have:
   \begin{align*}
-    \sum_{i=1}^n \log p(x_i) &\geq \sum_{i=1}^n \int Q(z_i) \log \frac{p(x_i, z_i)}{Q(z_i)} dz_i 
+    \sum_{i=1}^n \log p(x_i) &\geq \sum_{i=1}^n \int Q(z_i) \log \frac{p(x_i, z_i)}{Q(z_i)} dz_i = \mathbb{E}_{Q(z)} \left[ \log \frac{p(x, z)}{Q(z)} \right] \\
   \end{align*}
+  So for any probability distribution $Q(z)$ satisfying $1 > Q(z) > 0$, this lower bound is valid.
 \end{soln}
 
 \item \textbf{(4 Points)}
@@ -255,23 +250,24 @@ N.B: Unlike in GMMs, where the latent variable was discrete, here the latent var
 \begin{soln}
   For the E-step we need to be able to compute the expected log-likelihood with respect to the conditional distribution of our latent variables $z$ given $x$ and our current estimates of the parameters (E-step):
   \begin{align*}
-    Q(A, \eta | A^t, \eta^t) &= \mathbb{E}_{z|x, A^t, \eta^t} \left[ \log p(x,z| A, \eta) \right] \\
+    Q(A, \eta | A^t, \eta^t) &= \mathbb{E}_{z|x, A^t, \eta^t} \left[ \log p(x|z, (A, \eta)) \right] \\
   \end{align*}
-  From 2.3.2, we notice that $\log p(z)$ does not contain any parameters, so we can ignore it. What remains is:
+  This can be derived by setting $Q(z_i) =  \PP(z_i|x_i)$ to the lower bound we got in last question. We can keep going to get:
   \begin{align*}
-    Q(A, \eta) &= \mathbb{E} \left[ \log p(x|z) \right] \\
-    &= -\frac{1}{2} \sum_{i=1}^n \mathbb{E} \left[ (x_i - b - Az_i)^\top (\eta^2 I_D)^{-1} (x_i - b - Az_i)\right] - n^2 \log \eta + constant  \\
-    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \mathbb{E} \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A z_i + z_i^\top A^\top A z_i  \right] - n^2 \log \eta + constant \\
-    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A \mathbb{E}[z] + \mathbb{E}[z^\top A^\top A z]  \right] - n^2 \log \eta + constant \\
-    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A \mathbb{E}[z] + tr(A^\top A \mathbb{E}[z z^\top])  \right] - n^2 \log \eta + constant
+    Q(A, \eta) &= \mathbb{E}_{z|x, A, \eta} \left[ \log p(x|z, (A, \eta)) \right] \\
+    &= -\frac{1}{2} \sum_{i=1}^n \mathbb{E}_{z|x, A, \eta} \left[ (x_i - b - Az_i)^\top (\eta^2 I_D)^{-1} (x_i - b - Az_i)\right] - n^2 \log \eta + constant  \\
+    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \mathbb{E}_{z|x, A, \eta} \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A z_i + z_i^\top A^\top A z_i  \right] - n^2 \log \eta + constant \\
+    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A \mathbb{E}_{z|x, A, \eta}[z] + \mathbb{E}[z^\top A^\top A z]  \right] - n^2 \log \eta + constant \\
+    &= -\frac{1}{2 \eta^2} \sum_{i=1}^n \left[ \bar{x}_i^\top \bar{x}_i - 2 \bar{x}_i^\top A \mathbb{E}_{z|x, A, \eta}[z] + tr(A^\top A \mathbb{E}_{z|x, A, \eta}[z z^\top])  \right] - n^2 \log \eta + constant
   \end{align*}
 
   Before M-step we need to compute the expected value of $z$ and $z z^\top$, which can get from Q2.3.1: \\
   Let $\beta = A^\top C=A^\top (AA^\top + \eta^2 I)$
   \begin{align*}
-    \mathbb{E}_{z|x}[z] &= \beta (x- b \mathbf{1}_n^\top ) \\
-    \mathbb{E}_{z|x}[z z^\top] &= I_d - \beta A + \beta xx^\top \beta^\top
+    \mathbb{E}_{z|x, A, \eta}[Z] &= \beta (X- b \mathbf{1}_n^\top ) \\
+    \mathbb{E}_{z|x, A, \eta}[Z Z^\top] &= I_d - \beta A + \beta XX^\top \beta^\top
   \end{align*}
+  Where $X$ and $Z$ is the data matrix with each column being a data point, each row being a feature. 
 \end{soln}
 
 \item \textbf{(10 Points)}
@@ -285,7 +281,7 @@ by maximizing the lower bound obtained from parts 3 and 4.
   \end{align*}
   Setting it to $0$, we can solve for $A$:
   \begin{align*}
-    A^* &= (x \mathbb{E}_{z|x}[z^\top]) / ( \mathbb{E}_{z|x}[z z^\top]) \\
+    A^* &= (X \mathbb{E}_{z|x, A, \eta}[Z]^\top) / ( \mathbb{E}_{z|x, A, \eta}[Z Z^\top] ) \\
   \end{align*}
   Derivative w.r.t. $\eta$:
   \begin{align*}
@@ -293,9 +289,9 @@ by maximizing the lower bound obtained from parts 3 and 4.
   \end{align*}
   Setting it to $0$, we can solve for $\eta$:
   \begin{align*}
-    \eta^{2*} &= \frac{1}{nD} tr(\sum_{i=1}^n x_ix_i^\top - A^* \mathbb{E}_{z|x}[z] x_i^\top) \\
+    \eta^{2*} &= \frac{1}{nD} tr(XX^\top - A^* \mathbb{E}_{z|x, A, \eta}[Z] X^\top) \\
   \end{align*}
-  Bring in the $\mathbb{E}_{z|x}[z]$ and $\mathbb{E}_{z|x}[z z^\top]$ from Q2.3.5, we can get $A^*$ and $\eta^*$.
+  Bring in the $\mathbb{E}_{z|x, A, \eta}[Z]$ and $\mathbb{E}_{z|x, A, \eta}[Z Z^\top]$ from Q2.3.5, we can get new $A^*$ and $\eta^*$.
 \end{soln}
 
 \end{enumerate}
@@ -403,6 +399,29 @@ DRLV: 0.010081
 \includegraphics[width=3in]{pcaprog/buggy_pca} \hspace{0.4in}
 \includegraphics[width=3in]{pcaprog/demeaned_pca} \\
 The blue circles are from the original dataset and the red crosses are the reconstructed points.
+
+\begin{soln}
+  % insert Fig.png here, title is "knee point"
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Fig3.png}
+    \caption{Knee point in the singular values of data1000D}
+    \label{fig:obj}
+  \end{figure}
+  From Fig3.png we can see the knee point is 30, so we choose $d=30$.
+  In DRLV I set $A_0 = A$ from DRO, and set $\eta_0^2 = \frac{1}{D} tr(cov(X) - AA^\top)$.
+  \begin{verbatim}
+    Reconstruction Report for data1000D.csv:
+    Buggy PCA: 802.7313986203584
+    Demeaned PCA: 273.0459589786028
+    Normalized PCA: 273.62858099762326
+    DRO: 273.0459589786028
+    DRLV: 313.69333446428493
+  \end{verbatim}
+    Q1: Buggy PCA is trying to project the points onto a line that passes through the origin. However, the original points are not seem to on a line passes through the origin, so the reconstruction error is high.
+    Q2: No, because these two methods are equivalent to each other. The process of them are both demean, then do SVD, and then project the points onto the first $d$ principal components, finally add the mean back. So the reconstruction error is the same. Their cluster results $z$ are only different in the scale, but the reconstruction results $r(z)$ are the same.
+\end{soln}
+
 
 \vspace{0.2in}
 
